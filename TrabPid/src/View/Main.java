@@ -1,5 +1,26 @@
 package View;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.HeadlessException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import javax.media.CannotRealizeException;
+import javax.media.ControllerEvent;
+import javax.media.ControllerListener;
+import javax.media.Manager;
+import javax.media.NoPlayerException;
+import javax.sound.midi.ControllerEventListener;
+import javax.sound.midi.ShortMessage;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.media.Player;
+import javax.media.RealizeCompleteEvent;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -10,13 +31,16 @@ package View;
  *
  * @author FaelT
  */
-public class Main extends javax.swing.JFrame {
+public class Main extends javax.swing.JFrame implements ActionListener, ControllerListener{
 
     /**
      * Creates new form Main
      */
     public Main() {
         initComponents();
+        setTitle("Trabalho de PID");
+        setSize(900, 600);
+        setLocation(500, 100);
     }
 
     /**
@@ -32,7 +56,7 @@ public class Main extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         Btn_Video = new javax.swing.JButton();
         Btn_OCR = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
+        Tela = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList<>();
@@ -50,25 +74,19 @@ public class Main extends javax.swing.JFrame {
         Btn_Video.setText("Ler Video");
         Btn_Video.setActionCommand("Abrir Video");
         Btn_Video.setMargin(new java.awt.Insets(6, 18, 6, 18));
+        Btn_Video.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Btn_VideoActionPerformed(evt);
+            }
+        });
 
         Btn_OCR.setBackground(new java.awt.Color(0, 153, 204));
         Btn_OCR.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         Btn_OCR.setText("Play OCR");
         Btn_OCR.setMargin(new java.awt.Insets(6, 18, 6, 18));
 
-        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 525, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
+        Tela.setBackground(new java.awt.Color(255, 255, 255));
+        Tela.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         jLabel2.setText("Digito Segundo Execução");
 
@@ -94,7 +112,7 @@ public class Main extends javax.swing.JFrame {
                         .addComponent(jLabel1))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(Tela, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -112,7 +130,7 @@ public class Main extends javax.swing.JFrame {
                 .addGap(4, 4, 4)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(Tela, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(Btn_Video, javax.swing.GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE)
@@ -135,6 +153,15 @@ public class Main extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void Btn_VideoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Btn_VideoActionPerformed
+        try{
+            getfle();
+            createfile();
+        }catch(Exception ex){
+            JOptionPane.showMessageDialog(null, ex);
+        }
+    }//GEN-LAST:event_Btn_VideoActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -146,7 +173,7 @@ public class Main extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -173,11 +200,67 @@ public class Main extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Btn_OCR;
     private javax.swing.JButton Btn_Video;
+    private javax.swing.JPanel Tela;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JList<String> jList1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
+    private File file;
+    private Player player;
+    private void getfle() {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try{
+        JFileChooser choose = new JFileChooser();
+        choose.showOpenDialog(this);
+        file = choose.getSelectedFile();
+        if(!file.exists()){
+            throw new FileNotFoundException();
+        }
+         }catch(HeadlessException | FileNotFoundException e){
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
+
+    private void createfile() {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            player = Manager.createRealizedPlayer(file.toURL());
+            player.addControllerListener((ControllerListener) this);
+            player.start();
+            player.realize();
+        } catch (IOException | CannotRealizeException | NoPlayerException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+     @Override
+    public void controllerUpdate(ControllerEvent ce) {
+       // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+         try {
+             Container con=getContentPane();
+             if(ce instanceof RealizeCompleteEvent){
+                 Component visualComponent = player.getVisualComponent();
+                 if(visualComponent!= null){
+                     con.add(visualComponent, BorderLayout.CENTER);
+                 }
+                 Component controlcon=player.getControlPanelComponent();
+                 if(controlcon!=null){
+                     con.add(controlcon, BorderLayout.SOUTH);
+                 }
+                 con.doLayout();
+             }
+         } catch (Exception e) {
+              JOptionPane.showMessageDialog(null, e);
+         }
+    }
+    
+       
+    
 }
