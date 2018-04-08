@@ -6,6 +6,9 @@
 package View;
 
 import java.io.File;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -13,7 +16,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  *
  * @author FaelT
  */
-public class Tela2 extends javax.swing.JFrame {
+public class Tela2 extends javax.swing.JFrame  {
 
     /**
      * Creates new form Tela2
@@ -64,7 +67,7 @@ public class Tela2 extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    String caminho;
     private void jButtonAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAbrirActionPerformed
         JFileChooser fc = new JFileChooser();
         fc.setDialogTitle("Selecione o video");
@@ -78,7 +81,10 @@ public class Tela2 extends javax.swing.JFrame {
         //Verifica se foi escolhido um arquivo
         if(retorno == JFileChooser.APPROVE_OPTION){
             File file = fc.getSelectedFile();
-            campo_texto.setText(file.getPath());
+            caminho = file.getPath();
+            campo_texto.setText(caminho);
+            
+           System.out.print("teste2");
         }
     }//GEN-LAST:event_jButtonAbrirActionPerformed
 
