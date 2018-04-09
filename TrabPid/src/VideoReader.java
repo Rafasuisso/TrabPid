@@ -11,6 +11,7 @@
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -51,18 +52,8 @@ public final class VideoReader extends Application {
                 public void handle(final ActionEvent e) {
                     File file = fileChooser.showOpenDialog(stage);
                     if (file != null) {
-                        //openFile(file);
-                       
-                        VIDEO_URL = file.getPath();
-                      //  String nova = VIDEO_URL.replaceAll("[\\]","/");
-                        for(int i = 0; i<=VIDEO_URL.length(); i++){
-                            if(VIDEO_URL.charAt(i)== '\\'){
-                            VIDEO_URL ="/";
-                            }
-                        }
-                        System.out.print(VIDEO_URL);
-                       //VIDEO_URL= "file:/C:/Users/e.rafael.medeiros/Documentos/NetBeansProjects/TrabPid/TrabPid/build/classes/media/vid2.mp4";
-                        Media media = new Media(VIDEO_URL); // 1
+                        
+                        Media media = new Media(file.toURI().toString()); // 1
                         System.out.println(VIDEO_URL);
                         MediaPlayer mediaPlayer = new MediaPlayer(media); // 2
                         MediaView mediaView = new MediaView(mediaPlayer); // 3
