@@ -8,6 +8,7 @@
  *
  * @author e.rafael.medeiros
  */
+import Control.Controle;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
@@ -76,13 +77,8 @@ public final class VideoReader extends Application {
             new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(final ActionEvent e) {
-                    List<File> list =
-                        fileChooser.showOpenMultipleDialog(stage);
-                    if (list != null) {
-                        for (File file : list) {
-                            openFile(file);
-                        }
-                    }
+                    Controle control = new Controle();
+                   
                 }
             });
  
